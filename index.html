@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organizador de Tarefas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Modal Login (visível ao carregar) -->
+  <div id="modal-login" class="modal" style="display:block;">
+    <div class="modal-content">
+      <span class="close" id="close-login">&times;</span>
+      <h2>Bem Vindo</h2>
+      <form id="form-login">
+        <label for="login-email">Email:</label>
+        <input type="email" id="login-email" required>
+        <label for="login-senha">Senha:</label>
+        <input type="password" id="login-senha" required>
+        <button type="submit">Entrar</button>
+        <p style="margin-top:1rem;">
+          Ainda não tem conta?
+          <a href="#" id="link-criar-conta">Criar Conta</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Criar Conta -->
+  <div id="modal-criar-conta" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span class="close" id="close-criar-conta">&times;</span>
+      <h2>Criar Conta</h2>
+      <form id="form-criar-conta">
+        <label for="criar-email">Email:</label>
+        <input type="email" id="criar-email" required>
+        <label for="criar-senha">Senha:</label>
+        <input type="password" id="criar-senha" required>
+        <button type="submit">Registrar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Conteúdo principal escondido até login -->
+  <div id="main-content" style="display:none;">
+    <header>
+      <h1>Organizador de Tarefas</h1>
+      <nav>
+        <button id="btn-login">Bem Vindo</button>
+        <button id="btn-criar-conta">Criar Conta</button>
+      </nav>
+    </header>
+    <main>
+      <section id="tarefas">
+        <h2>Tarefas</h2>
+        <p>Aqui vais gerir as tuas tarefas.</p>
+      </section>
+      <section id="calendario">
+        <h2>Calendário</h2>
+        <p>Aqui vais adicionar eventos.</p>
+      </section>
+      <section id="notas">
+        <h2>Bloco de Notas</h2>
+        <textarea id="blocoNotas" placeholder="Escreve aqui as tuas notas..."></textarea>
+        <div style="margin-top:10px;">
+          <button id="btn-limpar">Limpar</button>
+          <button id="btn-salvar">Salvar</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Container das notificações -->
+  <div class="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,284 @@
+/* ------------------------
+   Estilo básico
+------------------------- */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #006eff;
+  color: #000000;
+}
+
+header {
+  background: #4a90e2;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+}
+
+
+nav button {
+  margin-left: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: white;
+  color: #4a90e2;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+nav button:hover {
+  background: #e0e0e0;
+}
+
+main {
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+section {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  flex: 1;
+  min-width: 250px;
+}
+
+/* ------------------------
+   Modal
+------------------------- */
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(10deg, #00b7ff 50%, #006eff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: #ffffffdb;
+  padding: 2.5rem 3rem;
+  border-radius: 16px;
+  box-shadow: 0 0px 50px #00ffff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 420px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Botão de fechar */
+.close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  color: #4a90e2;
+  cursor: pointer;
+}
+
+/* Título */
+.modal-content h2, 
+.modal-content h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #4a90e2;
+}
+
+/* Formulário */
+form label {
+  display: block;
+  margin-top: 1rem;
+  margin-bottom: 0.3rem;
+  font-weight: bold;
+  color: #444;
+}
+
+form input[type="email"],
+form input[type="password"] {
+  background-color: #4a91e242;
+  width: 93%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border: 2px solid #4a91e291;
+  border-radius: 8px;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+form input[type="email"]:focus,
+form input[type="password"]:focus {
+  border-color: #4a91e29c;
+  box-shadow: 0 0 6px rgba(74,144,226,0.3);
+  outline: none;
+}
+
+/* Botão */
+form button[type="submit"] {
+  width: 100%;
+  padding: 0.9rem;
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+form button[type="submit"]:hover {
+  background: #357ab8;
+}
+
+/* Link Criar Conta */
+.modal-content p {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.modal-content a {
+  color: #4a90e2;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.modal-content a:hover {
+  text-decoration: underline;
+}
+
+/* ------------------------
+   Bloco de Notas
+------------------------- */
+#blocoNotas {
+  width: 100%;
+  min-height: 200px;
+  padding: 0px;
+  font-size: 16px;
+  border-radius: 6px;
+  border-color: #006eff;
+  resize: none;
+}
+
+#btn-limpar, 
+#btn-salvar {
+  margin-top: 10px;
+  margin-right: 10px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#btn-limpar {
+  background: #e74c3c;
+  color: white;
+}
+
+#btn-limpar:hover {
+  background: #c0392b;
+}
+
+#btn-salvar {
+  background: #2ecc71;
+  color: white;
+}
+
+#btn-salvar:hover {
+  background: #27ae60;
+}
+
+/* ------------------------
+   Notificações (Toasts)
+------------------------- */
+.toast-container {
+  position: fixed;
+  right: 1rem;
+  top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 9999;
+  max-width: calc(100% - 2rem);
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  min-width: 260px;
+  max-width: 420px;
+  padding: 0.9rem 1rem;
+  border-radius: 50px;
+  border-color: #006eff;
+  box-shadow: 0 0px 10px #00e1ff;
+  color: #000000;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  transform: translateY(-6px);
+  opacity: 0;
+  transition: transform 200ms ease, opacity 200ms ease;
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.toast .icon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.466);
+  font-size: 18px;
+}
+
+.toast .content {
+  line-height: 1.4;
+}
+
+.toast .title {
+  font-weight: bold;
+  margin-bottom: 2px;
+  font-size: 13px;
+}
+
+/* Cores de acordo com a app */
+.toast.variant-success {
+  background: #ffffff83; /* igual ao botão salvar */
+}
+.toast.variant-info {
+  background: #ffffff83; /* azul principal */
+}
+.toast.variant-error {
+  background: #ffffff83; /* igual ao botão limpar */
+}
