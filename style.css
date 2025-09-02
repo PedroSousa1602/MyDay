@@ -66,7 +66,7 @@ section {
   top: 0;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(10deg, #00b7ff 50%, #006eff 100%);
+  background: linear-gradient(10deg, #7e7d7d 50%, #77b2ffb2 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -76,7 +76,7 @@ section {
   background: #ffffffdb;
   padding: 2.5rem 3rem;
   border-radius: 16px;
-  box-shadow: 0 0px 50px #00ffff;
+  box-shadow: 0 0px 15px #00ffff;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -119,11 +119,12 @@ form label {
 
 form input[type="email"],
 form input[type="password"] {
-  background-color: #4a91e242;
+  background-color: #ffffffdb;
+  box-shadow: 0 0px 15px #00ffff;
   width: 93%;
   padding: 0.8rem;
   margin-bottom: 1rem;
-  border: 2px solid #4a91e291;
+  border-color: #00ccff91;
   border-radius: 8px;
   transition: border 0.3s, box-shadow 0.3s;
 }
@@ -131,7 +132,7 @@ form input[type="password"] {
 form input[type="email"]:focus,
 form input[type="password"]:focus {
   border-color: #4a91e29c;
-  box-shadow: 0 0 6px rgba(74,144,226,0.3);
+  box-shadow: 0 0px 15px #00ffff;
   outline: none;
 }
 
