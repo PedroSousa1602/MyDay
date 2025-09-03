@@ -25,6 +25,11 @@ header h1 {
   letter-spacing: 1px;
 }
 
+h2 {
+  text-align: center;
+  text-shadow: 0 1px 1px #00ffff;;
+}
+
 
 nav button {
   margin-left: 0.5rem;
@@ -196,17 +201,21 @@ form button[type="submit"]:hover {
 }
 
 #btn-limpar {
-  background: #e74c3c;
+  background: #606060;
+  box-shadow: 0 0px 5px #ff0000;
   color: white;
+  border-radius: 12px;
 }
 
 #btn-limpar:hover {
-  background: #c0392b;
+  background: #b92424;
 }
 
 #btn-salvar {
-  background: #2ecc71;
+  background: #606060;
+  box-shadow: 0 0px 10px #00ff11;
   color: white;
+  border-radius: 12px;
 }
 
 #btn-salvar:hover {
