@@ -127,3 +127,64 @@ if (blocoNotas) {
   };
 })();
 
+// -------- SISTEMA DE TAREFAS --------
+const taskInput = document.getElementById("taskInput");
+const addBtn = document.getElementById("addBtn");
+const taskList = document.getElementById("taskList");
+
+if (addBtn) {
+  addBtn.addEventListener("click", addTask);
+  carregarTarefas();
+}
+
+function addTask() {
+  const taskText = taskInput.value.trim();
+  if (taskText === "") return;
+
+  const li = document.createElement("li");
+  li.textContent = taskText;
+  notify.info("Tarefa adicionada");
+
+  const removeBtn = document.createElement("button");
+  removeBtn.textContent = "Remover";
+  removeBtn.addEventListener("click", () => {
+    taskList.removeChild(li);
+    notify.info("Tarefa removida");
+    salvarTarefas();
+  });
+
+  li.appendChild(removeBtn);
+  taskList.appendChild(li);
+
+  taskInput.value = "";
+  taskInput.focus();
+
+  salvarTarefas();
+}
+
+function salvarTarefas() {
+  const tarefas = [];
+  document.querySelectorAll("#taskList li").forEach(li => {
+    tarefas.push(li.firstChild.textContent);
+  });
+  localStorage.setItem("tarefas", JSON.stringify(tarefas));
+}
+
+function carregarTarefas() {
+  const tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
+  tarefas.forEach(texto => {
+    const li = document.createElement("li");
+    li.textContent = texto;
+
+    const removeBtn = document.createElement("button");
+    removeBtn.textContent = "Remover";
+    removeBtn.addEventListener("click", () => {
+      taskList.removeChild(li);
+      salvarTarefas();
+    });
+
+    li.appendChild(removeBtn);
+    taskList.appendChild(li);
+  });
+}
+

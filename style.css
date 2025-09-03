@@ -208,7 +208,7 @@ form button[type="submit"]:hover {
 }
 
 #btn-limpar:hover {
-  background: #b92424;
+  background: #b924248f;
 }
 
 #btn-salvar {
@@ -291,4 +291,57 @@ form button[type="submit"]:hover {
 }
 .toast.variant-error {
   background: #ffffff83; /* igual ao botão limpar */
+}
+
+
+/* Lista de Tarefas */
+.input-area {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+#taskInput {
+  width: 70%;
+  border-radius: 15px;  
+  border-color: #00e1ff;
+  border-width: 3px;
+  box-shadow: 0 0px 10px #00e1ff;
+  padding: 8px;
+}
+
+#addBtn {
+  padding: 8px 12px;
+  margin-left: 5px;
+  cursor: pointer;
+  border-radius: 15px;  
+  border-color: #00e1ff;
+  border-width: 3px;
+  box-shadow: 0 0px 10px #00e1ff;
+}
+
+#taskList {
+  list-style-type: none;
+  padding: 0;
+}
+
+#taskList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid #b9b9b9;
+}
+
+#taskList li button {
+  background: #606060;
+  box-shadow: 0 0px 5px #ff0000;
+  color: white;
+  border-radius: 12px;  
+  cursor: pointer;
+  border-width: 0px;
+}
+
+#taskList li button:hover {
+  background: #b924248f;
 }
