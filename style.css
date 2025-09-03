@@ -196,17 +196,21 @@ form button[type="submit"]:hover {
 }
 
 #btn-limpar {
-  background: #e74c3c;
+  background: #606060;
+  box-shadow: 0 0px 5px #ff0000;
   color: white;
+  border-radius: 12px;
 }
 
 #btn-limpar:hover {
-  background: #c0392b;
+  background: #b92424;
 }
 
 #btn-salvar {
-  background: #2ecc71;
+  background: #606060;
+  box-shadow: 0 0px 10px #00ff11;
   color: white;
+  border-radius: 12px;
 }
 
 #btn-salvar:hover {
