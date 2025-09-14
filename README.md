@@ -21,4 +21,4 @@ Basta abrir o arquivo `index.html` no seu navegador. Nenhuma instalação adicio
 ![Tela de login](https://i.postimg.cc/NFKY61QP/chrome-Fr-Xkh-KUYs-Y.png)
 
 **Página principal do MyDay:**  
-![Página principal](COLE_AQUI_O_LINK_DIRETO_DA_IMAGEM.png)
+![Página principal](https://i.postimg.cc/y8s153jW/chrome-o-S8qx8-FBu-G.png)
