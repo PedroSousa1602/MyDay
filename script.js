@@ -56,7 +56,7 @@ document.getElementById('form-login').onsubmit = function(e) {
   if (validateUser(email, senha)) {
     document.getElementById('modal-login').style.display = 'none';
     document.getElementById('main-content').style.display = 'block';
-    document.querySelector('#main-content nav').style.display = 'none'; // Oculta os botões
+    document.querySelector('#main-content nav').style.display = 'none';
     notify.success("Login bem-sucedido");
   } else {
     notify.error("Email ou senha incorretos.");
@@ -64,33 +64,9 @@ document.getElementById('form-login').onsubmit = function(e) {
 };
 
 // ---------------------------
-// Bloco de Notas
+// Sistema de Notificações
 // ---------------------------
-const blocoNotas = document.getElementById("blocoNotas");
-const btnSalvar = document.getElementById("btn-salvar");
-const btnLimpar = document.getElementById("btn-limpar");
-
-// Carregar notas salvas
-if (blocoNotas) {
-  blocoNotas.value = localStorage.getItem("blocoNotas") || "";
-
-  // Botão Salvar
-  btnSalvar.addEventListener("click", () => {
-    localStorage.setItem("blocoNotas", blocoNotas.value);
-    notify.success("As tuas notas foram guardadas.");
-  });
-
-  // Botão Limpar
-  btnLimpar.addEventListener("click", () => {
-    blocoNotas.value = "";
-    localStorage.removeItem("blocoNotas");
-    notify.info("O bloco de notas foi limpo.");
-  });
-}
-
-
-
-   (function () {
+(function () {
   const container = document.querySelector('.toast-container');
 
   function createToast({title = '', message = '', type = 'info', duration = 4000}) {
@@ -127,7 +103,107 @@ if (blocoNotas) {
   };
 })();
 
-// -------- SISTEMA DE TAREFAS --------
+// ---------------------------
+// Bloco de Notas
+// ---------------------------
+const blocoNotas = document.getElementById("blocoNotas");
+const btnSalvar = document.getElementById("btn-salvar");
+const btnLimpar = document.getElementById("btn-limpar");
+
+if (blocoNotas) {
+  blocoNotas.value = localStorage.getItem("blocoNotas") || "";
+
+  btnSalvar.addEventListener("click", () => {
+    localStorage.setItem("blocoNotas", blocoNotas.value);
+    notify.success("As tuas notas foram guardadas.");
+  });
+
+  btnLimpar.addEventListener("click", () => {
+    blocoNotas.value = "";
+    localStorage.removeItem("blocoNotas");
+    notify.info("O bloco de notas foi limpo.");
+  });
+}
+
+// ---------------------------
+// Quadro de Prioridades (Drag & Drop)
+// ---------------------------
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  const data = ev.dataTransfer.getData("text");
+  const targetColumn = ev.target.closest('.column');
+  if (targetColumn) targetColumn.appendChild(document.getElementById(data));
+}
+
+// Salvar o estado do quadro
+function salvarQuadro() {
+  const quadro = {
+    alta: [],
+    media: [],
+    baixa: []
+  };
+
+  ['alta', 'media', 'baixa'].forEach(id => {
+    document.querySelectorAll(`#${id} .task span`).forEach(span => {
+      quadro[id].push(span.textContent);
+    });
+  });
+
+  localStorage.setItem('quadroPrioridades', JSON.stringify(quadro));
+}
+
+// Carregar o estado do quadro
+function carregarQuadro() {
+  const quadro = JSON.parse(localStorage.getItem('quadroPrioridades')) || { alta: [], media: [], baixa: [] };
+
+  ['alta', 'media', 'baixa'].forEach(id => {
+    quadro[id].forEach(taskText => addTaskToColumn(id, taskText));
+  });
+}
+
+// Atualizar addTaskToColumn para salvar após adicionar/remover
+function addTaskToColumn(columnId, taskText) {
+  const task = document.createElement('div');
+  task.className = 'task';
+  task.draggable = true;
+  task.id = 'task-' + Date.now();
+
+  const span = document.createElement('span');
+  span.textContent = taskText;
+
+  const removeBtn = document.createElement('button');
+  removeBtn.textContent = 'Remover';
+  removeBtn.style.marginLeft = '5px';
+  removeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    task.remove();
+    notify.info('Tarefa removida do quadro');
+    salvarQuadro();
+  });
+
+  task.ondragstart = drag;
+
+  task.appendChild(span);
+  task.appendChild(removeBtn);
+
+  document.getElementById(columnId).appendChild(task);
+
+  salvarQuadro(); // Salvar sempre que uma tarefa é adicionada
+}
+
+// Chamar ao carregar a página
+carregarQuadro();
+// ---------------------------
+// Sistema de Tarefas com botão "Adicionar ao Quadro"
+// ---------------------------
 const taskInput = document.getElementById("taskInput");
 const addBtn = document.getElementById("addBtn");
 const taskList = document.getElementById("taskList");
@@ -139,11 +215,12 @@ if (addBtn) {
 
 function addTask() {
   const taskText = taskInput.value.trim();
-  if (taskText === "") return;
+  if (!taskText) return;
 
   const li = document.createElement("li");
-  li.textContent = taskText;
-  notify.info("Tarefa adicionada");
+
+  const span = document.createElement("span");
+  span.textContent = taskText;
 
   const removeBtn = document.createElement("button");
   removeBtn.textContent = "Remover";
@@ -153,9 +230,21 @@ function addTask() {
     salvarTarefas();
   });
 
-  li.appendChild(removeBtn);
-  taskList.appendChild(li);
+  const addToBoardBtn = document.createElement("button");
+  addToBoardBtn.textContent = "Adicionar ao Quadro";
+  addToBoardBtn.style.marginLeft = "5px";
+  addToBoardBtn.addEventListener("click", () => {
+    addTaskToColumn('media', taskText);
+    li.remove();
+    notify.success("Tarefa adicionada ao quadro");
+    salvarTarefas();
+  });
 
+  li.appendChild(span);
+  li.appendChild(removeBtn);
+  li.appendChild(addToBoardBtn);
+
+  taskList.appendChild(li);
   taskInput.value = "";
   taskInput.focus();
 
@@ -164,8 +253,8 @@ function addTask() {
 
 function salvarTarefas() {
   const tarefas = [];
-  document.querySelectorAll("#taskList li").forEach(li => {
-    tarefas.push(li.firstChild.textContent);
+  document.querySelectorAll("#taskList li span").forEach(span => {
+    tarefas.push(span.textContent);
   });
   localStorage.setItem("tarefas", JSON.stringify(tarefas));
 }
@@ -174,7 +263,9 @@ function carregarTarefas() {
   const tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
   tarefas.forEach(texto => {
     const li = document.createElement("li");
-    li.textContent = texto;
+
+    const span = document.createElement("span");
+    span.textContent = texto;
 
     const removeBtn = document.createElement("button");
     removeBtn.textContent = "Remover";
@@ -183,8 +274,20 @@ function carregarTarefas() {
       salvarTarefas();
     });
 
+    const addToBoardBtn = document.createElement("button");
+    addToBoardBtn.textContent = "Adicionar ao Quadro";
+    addToBoardBtn.style.marginLeft = "5px";
+    addToBoardBtn.addEventListener("click", () => {
+      addTaskToColumn('media', texto);
+      li.remove();
+      notify.success("Tarefa adicionada ao quadro");
+      salvarTarefas();
+    });
+
+    li.appendChild(span);
     li.appendChild(removeBtn);
+    li.appendChild(addToBoardBtn);
+
     taskList.appendChild(li);
   });
 }
-
