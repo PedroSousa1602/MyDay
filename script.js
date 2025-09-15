@@ -1,83 +1,85 @@
-// ---------------------------
-// Abrir e fechar modais
-// ---------------------------
-document.getElementById('btn-login').onclick = function() {
-  document.getElementById('modal-login').style.display = 'block';
-};
-document.getElementById('btn-criar-conta').onclick = function() {
-  document.getElementById('modal-criar-conta').style.display = 'block';
-};
-document.getElementById('close-login').onclick = function() {
-  document.getElementById('modal-login').style.display = 'none';
-};
-document.getElementById('close-criar-conta').onclick = function() {
-  document.getElementById('modal-criar-conta').style.display = 'none';
-};
+// ===================================================
+//  SISTEMA DE MODAIS (Login / Criar Conta)
+// ===================================================
+const modalLogin = document.getElementById('modal-login');
+const modalCriarConta = document.getElementById('modal-criar-conta');
+const mainContent = document.getElementById('main-content');
 
-// Link "Criar conta" no modal de login
-document.getElementById('link-criar-conta').onclick = function(e) {
+// Abrir modais
+document.getElementById('btn-login').onclick = () => modalLogin.style.display = 'block';
+document.getElementById('btn-criar-conta').onclick = () => modalCriarConta.style.display = 'block';
+
+// Fechar modais
+document.getElementById('close-login').onclick = () => modalLogin.style.display = 'none';
+document.getElementById('close-criar-conta').onclick = () => modalCriarConta.style.display = 'none';
+
+// Link dentro do login para criar conta
+document.getElementById('link-criar-conta').onclick = (e) => {
   e.preventDefault();
-  document.getElementById('modal-login').style.display = 'none';
-  document.getElementById('modal-criar-conta').style.display = 'block';
+  modalLogin.style.display = 'none';
+  modalCriarConta.style.display = 'block';
 };
 
-// ---------------------------
-// Simulação de contas (LocalStorage)
-// ---------------------------
+// ===================================================
+//  GESTÃO DE CONTAS (LocalStorage)
+// ===================================================
 function getUsers() {
   return JSON.parse(localStorage.getItem('users') || '[]');
 }
+
 function saveUser(email, senha) {
   const users = getUsers();
   users.push({ email, senha });
   localStorage.setItem('users', JSON.stringify(users));
 }
+
 function validateUser(email, senha) {
-  const users = getUsers();
-  return users.some(user => user.email === email && user.senha === senha);
+  return getUsers().some(user => user.email === email && user.senha === senha);
 }
 
 // Registrar nova conta
-document.getElementById('form-criar-conta').onsubmit = function(e) {
+document.getElementById('form-criar-conta').onsubmit = (e) => {
   e.preventDefault();
   const email = document.getElementById('criar-email').value;
   const senha = document.getElementById('criar-senha').value;
+
   saveUser(email, senha);
   notify.success("Conta criada", "A tua conta foi criada com sucesso!");
-  document.getElementById('modal-criar-conta').style.display = 'none';
-  document.getElementById('modal-login').style.display = 'block';
+  modalCriarConta.style.display = 'none';
+  modalLogin.style.display = 'block';
 };
 
 // Login
-document.getElementById('form-login').onsubmit = function(e) {
+document.getElementById('form-login').onsubmit = (e) => {
   e.preventDefault();
   const email = document.getElementById('login-email').value;
   const senha = document.getElementById('login-senha').value;
+
   if (validateUser(email, senha)) {
-    document.getElementById('modal-login').style.display = 'none';
-    document.getElementById('main-content').style.display = 'block';
+    modalLogin.style.display = 'none';
+    mainContent.style.display = 'block';
     document.querySelector('#main-content nav').style.display = 'none';
     notify.success("Login bem-sucedido");
   } else {
     notify.error("Email ou senha incorretos.");
-  } 
+  }
 };
 
-// ---------------------------
-// Sistema de Notificações
-// ---------------------------
+// ===================================================
+//  SISTEMA DE NOTIFICAÇÕES (Toasts)
+// ===================================================
 (function () {
   const container = document.querySelector('.toast-container');
 
-  function createToast({title = '', message = '', type = 'info', duration = 4000}) {
+  function createToast({ title = '', message = '', type = 'info', duration = 4000 }) {
     const toast = document.createElement('div');
     toast.className = 'toast variant-' + type;
-    toast.setAttribute('role','status');
+    toast.setAttribute('role', 'status');
 
     toast.innerHTML = `
       <div class="icon">${
         type === 'success' ? '✔️' :
-        type === 'error' ? '⛔' : '📝'
+        type === 'error'   ? '⛔' : '📝'
       }</div>
       <div class="content">
         ${title ? `<div class="title">${title}</div>` : ''}
@@ -97,15 +99,15 @@ document.getElementById('form-login').onsubmit = function(e) {
   }
 
   window.notify = {
-    success: (t,m)=>createToast({title:t,message:m,type:'success'}),
-    info: (t,m)=>createToast({title:t,message:m,type:'info'}),
-    error: (t,m)=>createToast({title:t,message:m,type:'error'})
+    success: (t, m) => createToast({ title: t, message: m, type: 'success' }),
+    info:    (t, m) => createToast({ title: t, message: m, type: 'info' }),
+    error:   (t, m) => createToast({ title: t, message: m, type: 'error' })
   };
 })();
 
-// ---------------------------
-// Bloco de Notas
-// ---------------------------
+// ===================================================
+//  BLOCO DE NOTAS (LocalStorage)
+// ===================================================
 const blocoNotas = document.getElementById("blocoNotas");
 const btnSalvar = document.getElementById("btn-salvar");
 const btnLimpar = document.getElementById("btn-limpar");
@@ -125,9 +127,9 @@ if (blocoNotas) {
   });
 }
 
-// ---------------------------
-// Quadro de Prioridades (Drag & Drop)
-// ---------------------------
+// ===================================================
+//  QUADRO DE PRIORIDADES (Drag & Drop + LocalStorage)
+// ===================================================
 function allowDrop(ev) {
   ev.preventDefault();
 }
@@ -141,15 +143,11 @@ function drop(ev) {
   const data = ev.dataTransfer.getData("text");
   const targetColumn = ev.target.closest('.column');
   if (targetColumn) targetColumn.appendChild(document.getElementById(data));
+  salvarQuadro();
 }
 
-// Salvar o estado do quadro
 function salvarQuadro() {
-  const quadro = {
-    alta: [],
-    media: [],
-    baixa: []
-  };
+  const quadro = { alta: [], media: [], baixa: [] };
 
   ['alta', 'media', 'baixa'].forEach(id => {
     document.querySelectorAll(`#${id} .task span`).forEach(span => {
@@ -160,7 +158,6 @@ function salvarQuadro() {
   localStorage.setItem('quadroPrioridades', JSON.stringify(quadro));
 }
 
-// Carregar o estado do quadro
 function carregarQuadro() {
   const quadro = JSON.parse(localStorage.getItem('quadroPrioridades')) || { alta: [], media: [], baixa: [] };
 
@@ -169,7 +166,6 @@ function carregarQuadro() {
   });
 }
 
-// Atualizar addTaskToColumn para salvar após adicionar/remover
 function addTaskToColumn(columnId, taskText) {
   const task = document.createElement('div');
   task.className = 'task';
@@ -179,31 +175,24 @@ function addTaskToColumn(columnId, taskText) {
   const span = document.createElement('span');
   span.textContent = taskText;
 
-  const removeBtn = document.createElement('button');
-  removeBtn.textContent = 'Remover';
-  removeBtn.style.marginLeft = '5px';
-  removeBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
+  const removeBtn = createButton("Remover", () => {
     task.remove();
     notify.info('Tarefa removida do quadro');
     salvarQuadro();
   });
 
   task.ondragstart = drag;
-
-  task.appendChild(span);
-  task.appendChild(removeBtn);
+  task.append(span, removeBtn);
 
   document.getElementById(columnId).appendChild(task);
-
-  salvarQuadro(); // Salvar sempre que uma tarefa é adicionada
+  salvarQuadro();
 }
 
-// Chamar ao carregar a página
 carregarQuadro();
-// ---------------------------
-// Sistema de Tarefas com botão "Adicionar ao Quadro"
-// ---------------------------
+
+// ===================================================
+//  LISTA DE TAREFAS (com botão "Adicionar ao Quadro")
+// ===================================================
 const taskInput = document.getElementById("taskInput");
 const addBtn = document.getElementById("addBtn");
 const taskList = document.getElementById("taskList");
@@ -218,44 +207,33 @@ function addTask() {
   if (!taskText) return;
 
   const li = document.createElement("li");
-
   const span = document.createElement("span");
   span.textContent = taskText;
 
-  const removeBtn = document.createElement("button");
-  removeBtn.textContent = "Remover";
-  removeBtn.addEventListener("click", () => {
+  const removeBtn = createButton("Remover", () => {
     taskList.removeChild(li);
     notify.info("Tarefa removida");
     salvarTarefas();
   });
 
-  const addToBoardBtn = document.createElement("button");
-  addToBoardBtn.textContent = "Adicionar ao Quadro";
-  addToBoardBtn.style.marginLeft = "5px";
-  addToBoardBtn.addEventListener("click", () => {
+  const addToBoardBtn = createButton("Adicionar ao Quadro", () => {
     addTaskToColumn('media', taskText);
     li.remove();
     notify.success("Tarefa adicionada ao quadro");
     salvarTarefas();
   });
 
-  li.appendChild(span);
-  li.appendChild(removeBtn);
-  li.appendChild(addToBoardBtn);
-
+  li.append(span, removeBtn, addToBoardBtn);
   taskList.appendChild(li);
+
   taskInput.value = "";
   taskInput.focus();
-
   salvarTarefas();
 }
 
 function salvarTarefas() {
   const tarefas = [];
-  document.querySelectorAll("#taskList li span").forEach(span => {
-    tarefas.push(span.textContent);
-  });
+  document.querySelectorAll("#taskList li span").forEach(span => tarefas.push(span.textContent));
   localStorage.setItem("tarefas", JSON.stringify(tarefas));
 }
 
@@ -263,31 +241,33 @@ function carregarTarefas() {
   const tarefas = JSON.parse(localStorage.getItem("tarefas")) || [];
   tarefas.forEach(texto => {
     const li = document.createElement("li");
-
     const span = document.createElement("span");
     span.textContent = texto;
 
-    const removeBtn = document.createElement("button");
-    removeBtn.textContent = "Remover";
-    removeBtn.addEventListener("click", () => {
+    const removeBtn = createButton("Remover", () => {
       taskList.removeChild(li);
       salvarTarefas();
     });
 
-    const addToBoardBtn = document.createElement("button");
-    addToBoardBtn.textContent = "Adicionar ao Quadro";
-    addToBoardBtn.style.marginLeft = "5px";
-    addToBoardBtn.addEventListener("click", () => {
+    const addToBoardBtn = createButton("Adicionar ao Quadro", () => {
       addTaskToColumn('media', texto);
       li.remove();
       notify.success("Tarefa adicionada ao quadro");
       salvarTarefas();
     });
 
-    li.appendChild(span);
-    li.appendChild(removeBtn);
-    li.appendChild(addToBoardBtn);
-
+    li.append(span, removeBtn, addToBoardBtn);
     taskList.appendChild(li);
   });
+}
+
+// ===================================================
+//  FUNÇÕES AUXILIARES
+// ===================================================
+function createButton(text, onClick) {
+  const btn = document.createElement("button");
+  btn.textContent = text;
+  btn.style.marginLeft = "5px";
+  btn.addEventListener("click", onClick);
+  return btn;
 }
