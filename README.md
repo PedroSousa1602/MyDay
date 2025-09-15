@@ -8,10 +8,10 @@ MyDay é um site para gerenciamento de tarefas e anotações. Ele permite criar 
 - JavaScript
 
 ## Como usar
-Basta abrir o arquivo `index.html` no seu navegador. Nenhuma instalação adicional é necessária.
+Basta abrir o arquivo `index.html` no browser. Nenhuma instalação adicional é necessária.
 
 ## Funcionalidades
-- Criar, editar e remover tarefas.
+- Criar e remover tarefas.
 - Organizar tarefas por prioridade (Alta, Média, Baixa).
 - Bloco de notas para anotações rápidas.
 
